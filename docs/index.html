@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>url-query-kit · URL query 解析与序列化</title>
+  <script type="importmap">
+  { "imports": { "url-query-kit": "https://cdn.jsdelivr.net/npm/url-query-kit@1.0.0/dist/index.js" } }
+  </script>
+  <style>
+    :root { --bg:#f7f8fa; --card:#fff; --border:#e5e7eb; --text:#1f2329; --muted:#6b7280; --accent:#3b82f6; --code:#f3f4f6; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); padding:24px; }
+    .wrap { max-width:820px; margin:0 auto; }
+    h1 { font-size:22px; margin:0 0 4px; }
+    .sub { color:var(--muted); font-size:14px; margin-bottom:24px; }
+    .sub code { background:var(--code); padding:2px 6px; border-radius:4px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
+    .card h2 { font-size:16px; margin:0 0 12px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+    input { padding:10px 14px; border:1px solid var(--border); border-radius:8px; font-size:14px; flex:1; min-width:300px; font-family:"SF Mono",Menlo,monospace; }
+    pre { background:#0f172a; color:#d1d5db; border-radius:10px; padding:14px; font-size:13px; line-height:1.7; overflow-x:auto; white-space:pre-wrap; word-break:break-all; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>url-query-kit</h1>
+    <p class="sub">数组/对象/重复键 · 类型保留 · 增删改参数。安装：<code>npm i url-query-kit</code></p>
+
+    <div class="card">
+      <h2>① 解析 query 字符串</h2>
+      <div class="row"><input id="parse" value="a=1&a=2&num=3&bool=true&q=%E4%B8%AD%E6%96%87&empty=" /></div>
+      <pre id="parseOut"></pre>
+    </div>
+
+    <div class="card">
+      <h2>② 序列化对象</h2>
+      <pre id="strOut"></pre>
+    </div>
+
+    <div class="card">
+      <h2>③ 增删改参数</h2>
+      <pre id="setOut"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { parseQuery, stringifyQuery, setQuery, removeQuery } from 'url-query-kit'
+
+    const parseIn = document.getElementById('parse')
+    function renderParse() {
+      document.getElementById('parseOut').textContent = JSON.stringify(parseQuery(parseIn.value), null, 2)
+    }
+    parseIn.addEventListener('input', renderParse); renderParse()
+
+    document.getElementById('strOut').textContent = stringifyQuery({ a: 1, b: 'hello world', c: [1,2,3], d: null, e: true })
+    document.getElementById('setOut').textContent =
+      'setQuery("https://x.com/p?old=1#hash", { new: "值", old: 2 })\n  → ' + setQuery('https://x.com/p?old=1#hash', { new: '值', old: 2 }) +
+      '\n\nremoveQuery("https://x.com/p?a=1&b=2&c=3#h", ["a","c"])\n  → ' + removeQuery('https://x.com/p?a=1&b=2&c=3#h', ['a','c'])
+  </script>
+</body>
+</html>
